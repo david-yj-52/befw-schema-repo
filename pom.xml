@@ -1,0 +1,49 @@
+<project>
+    <groupId>com.tsh</groupId>
+    <artifactId>tsh-schema</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>          <!-- 소스 없이 generated 클래스만 jar로 묶음 -->
+
+    <dependencies>
+        <!-- 생성된 클래스에 @NotNull 붙이기 위해 필요 -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jsonschema2pojo</groupId>
+                <artifactId>jsonschema2pojo-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/schemas</sourceDirectory>
+                    <targetPackage>com.tsh.schema</targetPackage>
+                    <useJakartaValidation>true</useJakartaValidation>
+                    <includeAdditionalProperties>false</includeAdditionalProperties>
+                    <useTitleAsClassname>true</useTitleAsClassname>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals><goal>generate</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- Nexus 배포 설정 -->
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://nexus.tsh.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <url>http://nexus.tsh.com/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
+</project>

@@ -1,0 +1,14 @@
+{
+  "name": "@tsh/schema",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "generate": "quicktype schemas/ -l typescript -o src/index.ts",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "quicktype": "^23.0.0",
+    "typescript": "^5.0.0"
+  }
+}

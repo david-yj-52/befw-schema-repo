@@ -1,0 +1,49 @@
+# .github/workflows/publish.yml
+on:
+  push:
+    branches: [main]
+    paths: ["schemas/**"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # ──────────────── Java ────────────────
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+
+      - name: Publish Java (Maven → Nexus)
+        run: mvn deploy -s settings.xml
+
+      # ──────────────── Python ────────────────
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Generate Python models
+        run: |
+          pip install quicktype
+          quicktype schemas/ -l python -o tsh_schema/__init__.py
+
+      - name: Publish Python (pip → Nexus PyPI)
+        run: |
+          pip install twine build
+          python -m build
+          twine upload --repository-url http://nexus.tsh.com/pypi/ dist/*
+
+      # ──────────────── npm ────────────────
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Generate TypeScript types
+        run: |
+          npm install
+          npm run generate
+          npm run build
+
+      - name: Publish npm (→ Nexus npm)
+        run: npm publish --registry http://nexus.tsh.com/npm
