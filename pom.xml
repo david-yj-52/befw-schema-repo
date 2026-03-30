@@ -1,49 +1,97 @@
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.tsh</groupId>
     <artifactId>tsh-schema</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging>jar</packaging>          <!-- 소스 없이 generated 클래스만 jar로 묶음 -->
+    <packaging>jar</packaging>
+
+    <properties>
+        <java.version>21</java.version>
+        <openapi.generator.version>7.2.0</openapi.generator.version>
+    </properties>
 
     <dependencies>
-        <!-- 생성된 클래스에 @NotNull 붙이기 위해 필요 -->
+        <!-- 생성된 클래스 @NotNull 등에 필요 -->
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
             <version>3.0.2</version>
         </dependency>
+        <!-- 생성된 클래스 @JsonProperty 등에 필요 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.15.0</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!-- openapi-generator로 교체 -->
             <plugin>
-                <groupId>org.jsonschema2pojo</groupId>
-                <artifactId>jsonschema2pojo-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <configuration>
-                    <sourceDirectory>${project.basedir}/schemas</sourceDirectory>
-                    <targetPackage>com.tsh.schema</targetPackage>
-                    <useJakartaValidation>true</useJakartaValidation>
-                    <includeAdditionalProperties>false</includeAdditionalProperties>
-                    <useTitleAsClassname>true</useTitleAsClassname>
-                </configuration>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi.generator.version}</version>
                 <executions>
                     <execution>
                         <goals><goal>generate</goal></goals>
+                        <configuration>
+                            <!-- openapi/ 폴더의 yaml 읽음 -->
+                            <inputSpec>
+                                ${project.basedir}/openapi/server-api.yaml
+                            </inputSpec>
+                            <generatorName>java</generatorName>
+                            <!-- VO만 생성, API 클라이언트 코드는 생성 안 함 -->
+                            <generateApis>false</generateApis>
+                            <generateModels>true</generateModels>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
+                                <!-- Record 스타일 생성 -->
+                                <useRecords>true</useRecords>
+                                <library>native</library>
+                            </configOptions>
+                            <modelPackage>com.tsh.schema</modelPackage>
+                            <output>${project.build.directory}/generated-sources</output>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 생성된 소스를 컴파일 대상에 포함 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.4.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals><goal>add-source</goal></goals>
+                        <configuration>
+                            <sources>
+                                <source>
+                                    ${project.build.directory}/generated-sources
+                                </source>
+                            </sources>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
 
-    <!-- Nexus 배포 설정 -->
+    <!-- Nexus 배포 설정 — URL만 로컬로 변경 -->
     <distributionManagement>
         <snapshotRepository>
             <id>nexus-snapshots</id>
-            <url>http://nexus.tsh.com/repository/maven-snapshots/</url>
+            <url>http://localhost:8081/repository/maven-snapshots/</url>
         </snapshotRepository>
         <repository>
             <id>nexus-releases</id>
-            <url>http://nexus.tsh.com/repository/maven-releases/</url>
+            <url>http://localhost:8081/repository/maven-releases/</url>
         </repository>
     </distributionManagement>
 </project>
