@@ -1,0 +1,12 @@
+asyncapi: "2.6.0"
+info:
+  title: TSH Solace Message
+  version: "1.0.0"
+
+
+channels:
+  LOADER/VERSUION/UPDATE:
+    subscribe:
+      message:
+        payload:
+          $ref: "../../schemas/messages/server-sample-message.yaml"

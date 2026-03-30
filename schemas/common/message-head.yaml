@@ -1,0 +1,9 @@
+type: object
+required: [src, tgt, event, tid]
+properties:
+  src:
+    $ref: '../enums/service-name-enums.yaml#/ServiceName'
+  tgt: {type: string}
+  event: {type: string}
+  tid: {type: string}
+additionalProperties: false # 선언된 필드 외 추가 금지

@@ -1,0 +1,20 @@
+openapi: "3.1.0"
+info:
+    title: TSH Server API
+    version: "1.0.0"
+paths:
+  /api/server/message:
+    post:
+      summary: Agent → Server 메시지 수신
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../../schemas/messages/server-sample-message.yaml"
+      responses:
+        "200":
+          description: 성공
+        "400":
+          "description": 스키마 검증 실패
+

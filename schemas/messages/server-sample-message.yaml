@@ -1,0 +1,12 @@
+type: object
+required: [head, body]
+properties:
+  head:
+    $ref: "../common/message-head.yaml"
+  body:
+    allOf:
+      - $ref: "../common/message-body.yaml#/MessageBodyBase"
+      - type: object
+        required: [useYn]
+        properties:
+          useYn: {type: string}

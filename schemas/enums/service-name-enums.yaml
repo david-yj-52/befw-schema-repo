@@ -1,0 +1,3 @@
+ServiceName:
+  type: string
+  enum: [server, agent, loader, ui]
