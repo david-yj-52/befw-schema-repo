@@ -1,3 +1,8 @@
-ServiceName:
+SourceServiceName:
+  type: string
+  enum: [server, agent, loader, ui]
+
+
+TargetServiceName:
   type: string
   enum: [server, agent, loader, ui]

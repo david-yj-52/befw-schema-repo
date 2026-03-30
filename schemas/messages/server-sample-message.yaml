@@ -1,8 +1,16 @@
+title: ServerSampleMessage
 type: object
 required: [head, body]
 properties:
   head:
-    $ref: "../common/message-head.yaml"
+    allOf:
+      - $ref: "../common/message-head.yaml"
+      - type: object
+        required: [event]
+        properties:
+          event:
+            type: string
+            default: SERVER_SAMPLE_MESSAGE
   body:
     allOf:
       - $ref: "../common/message-body.yaml#/MessageBodyBase"

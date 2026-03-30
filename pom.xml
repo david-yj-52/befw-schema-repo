@@ -5,32 +5,51 @@
 
     <groupId>com.tsh</groupId>
     <artifactId>tsh-schema</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
         <java.version>21</java.version>
-        <openapi.generator.version>7.2.0</openapi.generator.version>
+        <openapi.generator.version>7.6.0</openapi.generator.version>
     </properties>
 
     <dependencies>
-        <!-- 생성된 클래스 @NotNull 등에 필요 -->
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
             <version>3.0.2</version>
         </dependency>
-        <!-- 생성된 클래스 @JsonProperty 등에 필요 -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <version>2.15.0</version>
         </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.15.0</version>
+        </dependency>
+        <!-- 테스트 의존성 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- openapi-generator로 교체 -->
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
@@ -39,20 +58,17 @@
                     <execution>
                         <goals><goal>generate</goal></goals>
                         <configuration>
-                            <!-- openapi/ 폴더의 yaml 읽음 -->
-                            <inputSpec>
-                                ${project.basedir}/openapi/server-api.yaml
-                            </inputSpec>
+                            <inputSpec>${project.basedir}/endpoints/http/server-api.yaml</inputSpec>
                             <generatorName>java</generatorName>
-                            <!-- VO만 생성, API 클라이언트 코드는 생성 안 함 -->
                             <generateApis>false</generateApis>
                             <generateModels>true</generateModels>
                             <generateSupportingFiles>false</generateSupportingFiles>
+                            <generateModelTests>false</generateModelTests>
+                            <generateModelDocumentation>false</generateModelDocumentation>
                             <configOptions>
                                 <useJakartaEe>true</useJakartaEe>
-                                <!-- Record 스타일 생성 -->
-                                <useRecords>true</useRecords>
                                 <library>native</library>
+                                <generateBuilders>true</generateBuilders>
                             </configOptions>
                             <modelPackage>com.tsh.schema</modelPackage>
                             <output>${project.build.directory}/generated-sources</output>
@@ -61,7 +77,6 @@
                 </executions>
             </plugin>
 
-            <!-- 생성된 소스를 컴파일 대상에 포함 -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -72,18 +87,16 @@
                         <goals><goal>add-source</goal></goals>
                         <configuration>
                             <sources>
-                                <source>
-                                    ${project.build.directory}/generated-sources
-                                </source>
+                                <source>${project.build.directory}/generated-sources</source>
                             </sources>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
+
     </build>
 
-    <!-- Nexus 배포 설정 — URL만 로컬로 변경 -->
     <distributionManagement>
         <snapshotRepository>
             <id>nexus-snapshots</id>

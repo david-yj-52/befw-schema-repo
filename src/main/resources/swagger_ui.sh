@@ -1,0 +1,1 @@
+docker run -p 8080:8080 -e SWAGGER_JSON=/spec/endpoints/http/server-api.yaml -v C:\workspace\tsh\boilerplate\be\befw-schema-repo:/spec swaggerapi/swagger-ui
