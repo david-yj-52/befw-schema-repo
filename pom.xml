@@ -5,7 +5,7 @@
 
     <groupId>com.tsh</groupId>
     <artifactId>tsh-schema</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -46,6 +46,23 @@
             <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>6.1.0</version>
+        </dependency>
+        <!-- Swagger annotations -->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>2.2.15</version>
+        </dependency>
+        <!-- SpringDoc OpenAPI -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+            <version>2.3.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -55,7 +72,9 @@
                 <artifactId>openapi-generator-maven-plugin</artifactId>
                 <version>${openapi.generator.version}</version>
                 <executions>
+                    <!-- VO 생성 -->
                     <execution>
+                        <id>generate-models</id>
                         <goals><goal>generate</goal></goals>
                         <configuration>
                             <inputSpec>${project.basedir}/endpoints/http/server-api.yaml</inputSpec>
@@ -71,6 +90,28 @@
                                 <generateBuilders>true</generateBuilders>
                             </configOptions>
                             <modelPackage>com.tsh.schema</modelPackage>
+                            <output>${project.build.directory}/generated-sources</output>
+                        </configuration>
+                    </execution>
+                    <!-- Controller 인터페이스 생성 -->
+                    <execution>
+                        <id>generate-apis</id>
+                        <goals><goal>generate</goal></goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/endpoints/http/server-api.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <generateApis>true</generateApis>
+                            <generateModels>false</generateModels>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <generateApiTests>false</generateApiTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <modelPackage>com.tsh.schema</modelPackage>
+                                <apiPackage>com.tsh.schema.api</apiPackage>
+                            </configOptions>
                             <output>${project.build.directory}/generated-sources</output>
                         </configuration>
                     </execution>
