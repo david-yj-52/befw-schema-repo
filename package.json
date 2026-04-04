@@ -1,5 +1,5 @@
 {
-  "name": "@david-yj-52/schema",   // ← GitHub 계정명으로 scope 변경
+  "name": "@david-yj-52/schema",
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,6 +12,6 @@
     "typescript": "^5.0.0"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"   // ← 추가
+    "registry": "https://npm.pkg.github.com"
   }
 }
