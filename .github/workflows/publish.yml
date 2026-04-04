@@ -35,9 +35,14 @@ jobs:
         with:
           python-version: '3.11'
 
+      - uses: actions/setup-node@v4        # ← quicktype을 위해 Node 먼저 설치
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+
       - name: Generate Python models
         run: |
-          pip install quicktype
+          npm install -g quicktype          # ← pip install 아닌 npm install로 변경
           quicktype schemas/ -l python -o tsh_schema/__init__.py
 
       - name: Publish Python (→ GitHub Packages PyPI)
@@ -51,10 +56,7 @@ jobs:
             dist/*
 
       # ──────────────── npm ────────────────
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          registry-url: 'https://npm.pkg.github.com'  # ← GitHub npm registry
+      # setup-node는 위로 올렸으므로 여기선 제거
 
       - name: Generate TypeScript types
         run: |
@@ -65,4 +67,4 @@ jobs:
       - name: Publish npm (→ GitHub Packages)
         run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # ← 자동 제공
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
