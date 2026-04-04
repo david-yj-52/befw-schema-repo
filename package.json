@@ -1,5 +1,5 @@
 {
-  "name": "@tsh/schema",
+  "name": "@david-yj-52/schema",   // ← GitHub 계정명으로 scope 변경
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,5 +10,8 @@
   "devDependencies": {
     "quicktype": "^23.0.0",
     "typescript": "^5.0.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"   // ← 추가
   }
 }
