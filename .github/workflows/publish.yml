@@ -42,6 +42,7 @@ jobs:
 
       - name: Generate Python models
         run: |
+          mkdir -p tsh_schema
           npm install -g quicktype          # ← pip install 아닌 npm install로 변경
           quicktype schemas/ -l python -o tsh_schema/__init__.py
 
