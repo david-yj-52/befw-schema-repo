@@ -7,6 +7,10 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write   # ← GitHub Packages 업로드 권한 필수
+
     steps:
       - uses: actions/checkout@v3
 
@@ -14,9 +18,16 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           java-version: '21'
+          # ← settings.xml 없이 여기서 GitHub Packages 설정
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
 
-      - name: Publish Java (Maven → Nexus)
-        run: mvn deploy -s settings.xml
+      - name: Publish Java (Maven → GitHub Packages)
+        run: mvn deploy
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # ← 별도 secret 불필요, 자동 제공
 
       # ──────────────── Python ────────────────
       - uses: actions/setup-python@v4
@@ -28,16 +39,21 @@ jobs:
           pip install quicktype
           quicktype schemas/ -l python -o tsh_schema/__init__.py
 
-      - name: Publish Python (pip → Nexus PyPI)
+      - name: Publish Python (→ GitHub Packages PyPI)
         run: |
           pip install twine build
           python -m build
-          twine upload --repository-url http://nexus.tsh.com/pypi/ dist/*
+          twine upload \
+            --repository-url https://maven.pkg.github.com/david-yj-52/${{ github.event.repository.name }} \
+            --username ${{ github.actor }} \
+            --password ${{ secrets.GITHUB_TOKEN }} \
+            dist/*
 
       # ──────────────── npm ────────────────
       - uses: actions/setup-node@v3
         with:
           node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'  # ← GitHub npm registry
 
       - name: Generate TypeScript types
         run: |
@@ -45,5 +61,7 @@ jobs:
           npm run generate
           npm run build
 
-      - name: Publish npm (→ Nexus npm)
-        run: npm publish --registry http://nexus.tsh.com/npm
+      - name: Publish npm (→ GitHub Packages)
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # ← 자동 제공
