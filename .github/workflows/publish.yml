@@ -19,9 +19,10 @@ jobs:
         with:
           java-version: '21'
           # ← settings.xml 없이 여기서 GitHub Packages 설정
+          distribution: 'temurin'
           server-id: github
-          server-username: GITHUB_ACTOR
-          server-password: GITHUB_TOKEN
+#          server-username: GITHUB_ACTOR
+#          server-password: GITHUB_TOKEN
 
       - name: Publish Java (Maven → GitHub Packages)
         run: mvn deploy
