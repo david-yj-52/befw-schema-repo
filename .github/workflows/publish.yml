@@ -51,9 +51,9 @@ jobs:
           pip install twine build
           python -m build
           twine upload \
-            --repository-url https://pypi.pkg.github.com/david-yj-52/${{ github.event.repository.name }} \
-            --username ${{ github.actor }} \
-            --password ${{ secrets.GITHUB_TOKEN }} \
+            --repository-url https://pypi.pkg.github.com/david-yj-52/
+#            --username ${{ github.actor }} \
+#            --password ${{ secrets.GITHUB_TOKEN }} \
             dist/*
 
       # ──────────────── npm ────────────────
