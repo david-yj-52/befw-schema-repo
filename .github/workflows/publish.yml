@@ -8,8 +8,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      packages: write   # ← GitHub Packages 업로드 권한 필수
+      contents: write      # ← Releases 업로드를 위해 read → write 변경
+      packages: write
 
     steps:
       - uses: actions/checkout@v4
@@ -18,24 +18,23 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           java-version: '21'
-          # ← settings.xml 없이 여기서 GitHub Packages 설정
           distribution: 'temurin'
           server-id: github
-#          server-username: GITHUB_ACTOR
-#          server-password: GITHUB_TOKEN
+          server-username: GITHUB_ACTOR      # ← 주석 해제
+          server-password: GITHUB_TOKEN      # ← 주석 해제
 
       - name: Publish Java (Maven → GitHub Packages)
         run: mvn deploy
         env:
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # ← 별도 secret 불필요, 자동 제공
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # ──────────────── Python ────────────────
       - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
-      - uses: actions/setup-node@v4        # ← quicktype을 위해 Node 먼저 설치
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://npm.pkg.github.com'
@@ -43,22 +42,24 @@ jobs:
       - name: Generate Python models
         run: |
           mkdir -p tsh_schema
-          npm install -g quicktype          # ← pip install 아닌 npm install로 변경
+          npm install -g quicktype
           quicktype schemas/ -l python -o tsh_schema/__init__.py
 
-      - name: Publish Python (→ GitHub Packages PyPI)
+      - name: Build Python package
         run: |
-          pip install twine build
+          pip install build
           python -m build
-          twine upload \
-            --repository-url https://pypi.pkg.github.com/david-yj-52/ \
-            --username ${{ github.actor }} \
-            --password ${{ secrets.GITHUB_TOKEN }} \
-            dist/*
+
+      - name: Publish Python (→ GitHub Releases)   # ← PyPI → Releases 로 변경
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: schema-${{ github.sha }}
+          name: Schema ${{ github.sha }}
+          files: dist/*.whl
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # ──────────────── npm ────────────────
-      # setup-node는 위로 올렸으므로 여기선 제거
-
       - name: Generate TypeScript types
         run: |
           npm install
