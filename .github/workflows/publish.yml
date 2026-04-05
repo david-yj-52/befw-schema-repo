@@ -2,7 +2,7 @@
 on:
   push:
     branches: [main]
-    paths: ["schemas/**", "/.github/**"]
+    paths: ["schemas/**", ".github/**"]
 
 jobs:
   publish:
