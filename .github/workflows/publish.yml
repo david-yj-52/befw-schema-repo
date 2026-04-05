@@ -2,7 +2,7 @@
 on:
   push:
     branches: [main]
-    paths: ["schemas/**"]
+    paths: ["schemas/**", "/.github/**"]
 
 jobs:
   publish:
@@ -65,6 +65,10 @@ jobs:
           npm install
           npm run generate
           npm run build
+      - name: Set npm version
+        run: |
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)           # 예: 20260405195701
+          npm version "1.0.0-$TIMESTAMP" --no-git-tag-version 
 
       - name: Publish npm (→ GitHub Packages)
         run: npm publish
