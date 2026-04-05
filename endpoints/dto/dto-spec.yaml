@@ -1,0 +1,14 @@
+# schemas/dto/dto-spec.yaml
+openapi: "3.1.0"
+info:
+  title: TSH DTO Schema
+  version: "1.0.0"
+
+paths: {}   # 엔드포인트 없음, DTO만 정의
+
+components:
+  schemas:
+    SolaceConnectDto:
+      $ref: "../../schemas/dto/messaging/solace-connection-dto.yaml"
+    # DTO 추가될 때마다 여기에 등록
+    #"../../schemas/common/message-head.yaml"

@@ -115,6 +115,28 @@
                             <output>${project.build.directory}/generated-sources</output>
                         </configuration>
                     </execution>
+                    <!-- DTO 생성 추가 -->
+                    <execution>
+                        <id>generate-dto</id>
+                        <goals><goal>generate</goal></goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/schemas/dto/dto-spec.yaml</inputSpec>
+                            <generatorName>java</generatorName>
+                            <generateApis>false</generateApis>
+                            <generateModels>true</generateModels>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <generateModelTests>false</generateModelTests>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
+                                <library>native</library>
+                                <generateBuilders>true</generateBuilders>
+                            </configOptions>
+                            <!-- 패키지를 dto로 분리 -->
+                            <modelPackage>com.tsh.schema.dto</modelPackage>
+                            <output>${project.build.directory}/generated-sources</output>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 

@@ -1,7 +1,7 @@
 title: SolaceConnectDto
-type: Object
+type: object
 require: [moduleName, env]
 properties:
   moduleName: {type: string}
-  evn: {type: string}
+  env: {type: string}
 additionalProperties: true
