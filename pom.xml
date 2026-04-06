@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -75,7 +75,9 @@
                     <!-- VO 생성 -->
                     <execution>
                         <id>generate-models</id>
-                        <goals><goal>generate</goal></goals>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/endpoints/http/server-api.yaml</inputSpec>
                             <generatorName>java</generatorName>
@@ -96,7 +98,9 @@
                     <!-- Controller 인터페이스 생성 -->
                     <execution>
                         <id>generate-apis</id>
-                        <goals><goal>generate</goal></goals>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/endpoints/http/server-api.yaml</inputSpec>
                             <generatorName>spring</generatorName>
@@ -118,9 +122,11 @@
                     <!-- DTO 생성 추가 -->
                     <execution>
                         <id>generate-dto</id>
-                        <goals><goal>generate</goal></goals>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/schemas/dto/dto-spec.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/dto/core-lib/dto-spec.yaml</inputSpec>
                             <generatorName>java</generatorName>
                             <generateApis>false</generateApis>
                             <generateModels>true</generateModels>
@@ -147,7 +153,9 @@
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
-                        <goals><goal>add-source</goal></goals>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
                         <configuration>
                             <sources>
                                 <source>${project.build.directory}/generated-sources</source>
