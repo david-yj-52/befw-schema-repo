@@ -1,8 +1,8 @@
 MessageBodyBase:
   type: object
-  required: [siteId, userId]
+  required: [tenant, userId]
   properties:
-    siteId: {type: string}
+    tenant: {type: string}
     userId: {type: string}
 
 
@@ -10,7 +10,6 @@ MessageBodyManufacture:
   allOf:
     - $ref: "#/MessageBodyBase"
   type: object
-#  required: [siteId, userId]
   properties:
     lotId: {type: string}
     eqpId: {type: string}
@@ -21,7 +20,6 @@ MessageBodyCommerce:
   allOf:
     - $ref: "#/MessageBodyBase"
   type: object
-#  required: [siteId, userId]
   properties:
     prodId: {type: string}
     prodNm: {type: string}

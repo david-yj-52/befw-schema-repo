@@ -1,0 +1,27 @@
+title: AddMsgSrvInf
+type: object
+required: [head, body]
+properties:
+  head:
+    allOf:
+      - $ref: "../common/message-head.yaml"
+      - type: object
+        required: [event]
+        properties:
+          event:
+            type: string
+            default: ADD_MSG_SRV_INF
+  body:
+    allOf:
+      - $ref: "../common/message-body.yaml#/MessageBodyBase"
+      - type: object
+        required: [srvId, solNm,host,port,connUser,pwd,domain]
+        properties:
+          srvId: {type: string}
+          solNm:
+            $ref: "../../enums/msg-srv-sol.yaml#/MessageServerSolutionName"
+          host: {type: string}
+          port: {type: integer}
+          connUser: {type: string}
+          pwd: {type: string, format: password}
+          domain: {type: string}

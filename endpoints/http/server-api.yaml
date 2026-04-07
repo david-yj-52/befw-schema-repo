@@ -9,6 +9,13 @@ components:
       $ref: "../../schemas/common/message-head.yaml"
     ServerSampleMessage:        # ← 이게 클래스명이 됩니다
       $ref: "../../schemas/messages/server-sample-message.yaml"
+    AddMsgSrvInf:
+      $ref: "../../schemas/messages/add-msg-srv-inf.yaml"
+  responses:
+    Success:
+      description: 성공
+    BadRequest:
+      description: 스키마 검증 실패
 
 paths:
   /api/server/message:
@@ -22,6 +29,20 @@ paths:
               $ref: "#/components/schemas/ServerSampleMessage"  # ← components 참조
       responses:
         "200":
-          description: 성공
+          $ref: "#/components/responses/Success"
         "400":
-          description: 스키마 검증 실패
+          $ref: "#/components/responses/BadRequest"
+  /mdm/msgSrv:
+    post:
+      summary: Solution Server 추가
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddMsgSrvInf"  # ← components 참조
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "400":
+          $ref: "#/components/responses/BadRequest"

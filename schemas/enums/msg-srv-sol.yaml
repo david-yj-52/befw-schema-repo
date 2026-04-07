@@ -1,0 +1,3 @@
+MessageServerSolutionName:
+  type: string
+  enum: [Kafka, Solace]

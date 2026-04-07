@@ -1,3 +1,0 @@
-EventName:
-  type: string
-  enum: [SERVER_SAMPLE_MESSAGE]
