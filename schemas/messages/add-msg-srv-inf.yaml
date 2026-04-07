@@ -19,7 +19,7 @@ properties:
         properties:
           srvId: {type: string}
           solNm:
-            $ref: "../../enums/msg-srv-sol.yaml#/MessageServerSolutionName"
+            $ref: "../enums/msg-srv-sol.yaml#/MessageServerSolutionName"
           host: {type: string}
           port: {type: integer}
           connUser: {type: string}
